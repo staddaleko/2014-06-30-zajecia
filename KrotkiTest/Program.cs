@@ -24,13 +24,30 @@ namespace KrotkiTest
             ZapytanieDzisiate(osoby, zawody);
             ZapytanieJedenaste(osoby);
             ZapytanieDwunaste(osoby, zawody);
-
-
+            ZapytanieTrzynaste(osoby, zawody);
 
             Console.ReadKey();
 
         }
 
+        private static void ZapytanieTrzynaste(IEnumerable<Osoba> osoby, List<Zawod> zawody)
+        {
+            Console.WriteLine("\n*********** trzynaste zapytanie za pomoca iteracji ************");
+
+            foreach (var z in zawody)
+            {
+                decimal suma = 0;
+                foreach (var o in osoby)
+                {
+                    if (z.IdZawodu == o.IdZawodu)
+                    {
+                        suma += o.Pensja;
+                    }
+                }
+                Console.WriteLine("{0}: {1:C} ", z.Nazwa, suma);//wyniki identyczne jak w zapytaniu dwunastym
+
+            }
+        }
         private static void ZapytanieDwunaste(IEnumerable<Osoba> osoby, List<Zawod> zawody)
         {
             Console.WriteLine("\n*********** dwunaste zapytanie ************");
