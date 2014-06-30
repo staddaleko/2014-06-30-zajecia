@@ -19,11 +19,34 @@ namespace KrotkiTest
             ZapytanieSzoste(osoby);
             ZapytanieSiodme(osoby);
             ZapytanieOsme(osoby);
+            ZapytanieDziewiate(osoby);
 
-
+            
+            
+            
             Console.ReadKey();
+
         }
 
+        private static void ZapytanieDziewiate(IEnumerable<Osoba> osoby)
+        {
+            var zawody = Zawod.Utworz();
+            Console.WriteLine("\n*********** dziewiąte zapytanie ************");
+            var os7 = from z in zawody
+                      join o in osoby
+                      on z.IdZawodu equals o.IdZawodu into grupa
+                      from g in grupa.DefaultIfEmpty()//domyslma wartosc jezeli puste, czylu 'null' w tym wypadku
+                      select new
+                      {
+                          z.Nazwa,
+                          Imie = g == null ? "--- brak imienia ---" : g.Imie, //pytanie czy wartość 'null' i jeżeli tak, to '---'
+                          Nazwisko = g == null ? "--- brak nazwiska ---" : g.Nazwisko
+                      };
+            foreach (var z in os7)
+            {
+                Console.WriteLine("{0} -- {1} {2}", z.Nazwa, z.Imie, z.Nazwisko);
+            }
+        }
         private static void ZapytanieOsme(IEnumerable<Osoba> osoby)
         {
             Console.WriteLine("\n*********** ósme zapytanie ************");
