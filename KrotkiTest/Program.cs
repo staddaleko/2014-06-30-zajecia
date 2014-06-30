@@ -23,12 +23,31 @@ namespace KrotkiTest
             var zawody = Zawod.Utworz();
             ZapytanieDzisiate(osoby, zawody);
             ZapytanieJedenaste(osoby);
-            
-            
+            ZapytanieDwunaste(osoby, zawody);
+
+
+
             Console.ReadKey();
 
         }
 
+        private static void ZapytanieDwunaste(IEnumerable<Osoba> osoby, List<Zawod> zawody)
+        {
+            Console.WriteLine("\n*********** dwunaste zapytanie ************");
+            var os10 = from z in zawody
+                       join o in osoby on z.IdZawodu equals o.IdZawodu into grupa
+                       from g in grupa.DefaultIfEmpty() //left join
+                       group g by z.Nazwa into grupa2
+                       select new
+                       {
+                           nazwaZawodu = grupa2.Key,
+                           suma = grupa2.Sum(z => z == null ? 0 : z.Pensja)
+                       };
+            foreach (var z in os10)
+            {
+                Console.WriteLine("{0} zarobił {1:C}", z.nazwaZawodu, z.suma);
+            }
+        }
         private static void ZapytanieJedenaste(IEnumerable<Osoba> osoby)
         {
             Console.WriteLine("\n*********** jedenaste zapytanie ************");
