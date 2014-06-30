@@ -20,14 +20,34 @@ namespace KrotkiTest
             ZapytanieSiodme(osoby);
             ZapytanieOsme(osoby);
             ZapytanieDziewiate(osoby);
-
-            
+            var zawody = Zawod.Utworz();
+            ZapytanieDzisiate(osoby, zawody);
+            ZapytanieJedenaste(osoby);
             
             
             Console.ReadKey();
 
         }
 
+        private static void ZapytanieJedenaste(IEnumerable<Osoba> osoby)
+        {
+            Console.WriteLine("\n*********** jedenaste zapytanie ************");
+            var os9 = osoby.GroupBy(p => p.IdZawodu);//pokazuje 'idzawodu' oraz sume pensji
+            foreach (var z in os9)
+            {
+                Console.WriteLine("IdZawodu:{0} -- Łącznie zarobili:{1}", z.Key, z.Sum(p => p.Pensja));//jedna odpowiedź jest pusta, vo ma wartość 'null'.
+            }
+        }
+        private static void ZapytanieDzisiate(IEnumerable<Osoba> osoby, List<Zawod> zawody)
+        {
+            Console.WriteLine("\n*********** dziesiate zapytanie ************");
+            var os8 = zawody.GroupJoin(osoby, z => z.IdZawodu, o => o.IdZawodu,
+                (z, grupa) => new { z.Nazwa, Ilosc = grupa.Count() });
+            foreach (var z in os8)
+            {
+                Console.WriteLine("{0} {1}", z.Nazwa, z.Ilosc);
+            }
+        }
         private static void ZapytanieDziewiate(IEnumerable<Osoba> osoby)
         {
             var zawody = Zawod.Utworz();
