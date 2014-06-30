@@ -16,12 +16,56 @@ namespace KrotkiTest
             ZapytanieTrzecie(osoby);
             ZapytanieCzwarte(osoby);
             ZapytaniePiate(osoby);
-
             ZapytanieSzoste(osoby);
+            ZapytanieSiodme(osoby);
+            ZapytanieOsme(osoby);
+
 
             Console.ReadKey();
         }
 
+        private static void ZapytanieOsme(IEnumerable<Osoba> osoby)
+        {
+            Console.WriteLine("\n*********** ósme zapytanie ************");
+            var zawody = Zawod.Utworz();
+            //metoda dłuższa:            
+            //var os6 = from z in zawody
+            //          join o in osoby
+            //          on z.IdZawodu equals o.IdZawodu into grupa
+            //          select new { z.Nazwa, grupa };
+            //foreach (var z in os6)
+            //{
+            //    Console.WriteLine(z.Nazwa);
+            //    foreach (var o in z.grupa)
+            //    {
+            //        Console.WriteLine(o);
+            //    }
+
+            //metoda krótsza, ale tożsama z powyższą:
+            //tworzymy jedną 'klasę', w której wyszczególniane są wszystkie inne elementy. Tu wg zawodu otrzymujemy członków.
+            var os6alt = zawody.GroupJoin(osoby, z => z.IdZawodu, o => o.IdZawodu,
+                (z, grupa) => new { z.Nazwa, grupa });
+
+            foreach (var z in os6alt)
+            {
+                Console.WriteLine(z.Nazwa);
+                foreach (var o in z.grupa)
+                {
+                    Console.WriteLine("\t\t{0}", o);
+                }
+            }
+        }
+        private static void ZapytanieSiodme(IEnumerable<Osoba> osoby)
+        {
+            Console.WriteLine("\n*********** siódme zapytanie (inna składnia niż w szóstym, ta sama odpowiedź) ************"); //to jest alternatywna wersja zapytania szóstego.
+            var zawody = Zawod.Utworz();
+            var os5 = osoby.Join(zawody, o => o.IdZawodu, z => z.IdZawodu,
+                (o, z) => new { o.Imie, o.Nazwisko, z.Nazwa });
+            foreach (var o in os5)
+            {
+                Console.WriteLine("{0} {1} -- zawód: {2}", o.Imie, o.Nazwisko, o.Nazwa);
+            }
+        }
         private static void ZapytanieSzoste(IEnumerable<Osoba> osoby)
         {
             Console.WriteLine("\n*********** szóste zapytanie (po dużych zmianach w bazach danych) ************");
@@ -32,8 +76,6 @@ namespace KrotkiTest
                 Console.WriteLine("{0} {1} -- zawód: {2}", o.Imie, o.Nazwisko, o.Nazwa);
             }
         }
-
-
         private static void ZapytaniePiate(IEnumerable<Osoba> osoby)
         {
             int nrStrony = 2, ilosc = 2; //pominelismy dwa pierwsze wpisy, ilosc wpisow na stronie = 2
@@ -93,7 +135,7 @@ namespace KrotkiTest
         public string Nazwisko { set; get; }
         public int Rok { set; get; }
         public decimal Pensja { set; get; }
-        public int? IdZawodu { get; set; }
+        public int? IdZawodu { get; set; } // '?' umożliwia wartość 'null' dla zmiennej
 
         public override string ToString()
         {
