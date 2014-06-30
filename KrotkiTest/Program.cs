@@ -17,10 +17,20 @@ namespace KrotkiTest
             ZapytanieCzwarte(osoby);
             ZapytaniePiate(osoby);
 
-
-
+            ZapytanieSzoste(osoby);
 
             Console.ReadKey();
+        }
+
+        private static void ZapytanieSzoste(IEnumerable<Osoba> osoby)
+        {
+            Console.WriteLine("\n*********** szóste zapytanie (po dużych zmianach w bazach danych) ************");
+            var zawody = Zawod.Utworz();
+            var os5 = from o in osoby join z in zawody on o.IdZawodu equals z.IdZawodu select new { o.Imie, o.Nazwisko, z.Nazwa }; //typowy inner join
+            foreach (var o in os5)
+            {
+                Console.WriteLine("{0} {1} -- zawód: {2}", o.Imie, o.Nazwisko, o.Nazwa);
+            }
         }
 
 
@@ -83,6 +93,7 @@ namespace KrotkiTest
         public string Nazwisko { set; get; }
         public int Rok { set; get; }
         public decimal Pensja { set; get; }
+        public int? IdZawodu { get; set; }
 
         public override string ToString()
         {
@@ -93,13 +104,29 @@ namespace KrotkiTest
         {
             return new List<Osoba>()
             {
-                new Osoba(){Imie="Bob", Nazwisko="Budownicz", Rok=1980, Pensja=4000},
-                new Osoba(){Imie="Kubuś", Nazwisko="Puchatek", Rok=1936, Pensja=1000},
-                new Osoba(){Imie="Kaczor", Nazwisko="Donald", Rok=1930, Pensja=3000},
-                new Osoba(){Imie="Papa", Nazwisko="Smerf", Rok=1990, Pensja=5000},
-                new Osoba(){Imie="Maja", Nazwisko="Pszczólka", Rok=1979, Pensja=7000},
-                new Osoba(){Imie="Królewna", Nazwisko="Śnieżka", Rok=1910, Pensja=2000},
-                new Osoba(){Imie="Jaga", Nazwisko="Baba", Rok=1780, Pensja=9000}
+                new Osoba(){Imie="Bob", Nazwisko="Budownicz", Rok=1980, Pensja=4000, IdZawodu=null},
+                new Osoba(){Imie="Kubuś", Nazwisko="Puchatek", Rok=1936, Pensja=1000, IdZawodu=4},
+                new Osoba(){Imie="Kaczor", Nazwisko="Donald", Rok=1930, Pensja=3000, IdZawodu=4},
+                new Osoba(){Imie="Papa", Nazwisko="Smerf", Rok=1990, Pensja=5000, IdZawodu=4},
+                new Osoba(){Imie="Maja", Nazwisko="Pszczólka", Rok=1979, Pensja=7000, IdZawodu=3},
+                new Osoba(){Imie="Królewna", Nazwisko="Śnieżka", Rok=1910, Pensja=2000, IdZawodu=1},
+                new Osoba(){Imie="Jaga", Nazwisko="Baba", Rok=1780, Pensja=9000, IdZawodu=1}
+            };
+        }
+    }
+    class Zawod
+    {
+        public int IdZawodu { get; set; }
+        public String Nazwa { get; set; }
+
+        public static List<Zawod> Utworz()
+        {
+            return new List<Zawod>()
+            {
+                new Zawod(){IdZawodu=1, Nazwa="Najstarszy zawód świata"},
+                new Zawod(){IdZawodu=2, Nazwa="Programista"},
+                new Zawod(){IdZawodu=3, Nazwa="Galerianka"},
+                new Zawod(){IdZawodu=4, Nazwa="Polityk"}
             };
         }
     }
